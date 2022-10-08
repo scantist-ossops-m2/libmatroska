@@ -196,11 +196,11 @@ DECLARE_MKX_MASTER(KaxBlockGroup)
 
     operator KaxInternalBlock &();
 
-    const KaxCluster *GetParentCluster() const { return ParentCluster; }
+    const KaxCluster *GetParentCluster2() const { return ParentCluster; }
 
   protected:
-    KaxCluster * ParentCluster{nullptr};
-    const KaxTrackEntry * ParentTrack{nullptr};
+    KaxCluster * ParentCluster;
+    const KaxTrackEntry * ParentTrack;
 };
 
 class MATROSKA_DLL_API KaxInternalBlock : public EbmlBinary {
@@ -344,12 +344,12 @@ public:
 
   bool ReplaceSimpleByGroup();
 protected:
-  KaxCluster *ParentCluster{nullptr};
+  KaxCluster *ParentCluster;
   union {
     KaxBlockGroup *group;
     KaxSimpleBlock *simpleblock;
   } Block;
-  bool bUseSimpleBlock;
+  bool bUseSimpleBlock{false};
   BlockBlobType SimpleBlockMode;
 };
 
@@ -369,8 +369,8 @@ DECLARE_MKX_BINARY_CONS(KaxBlockVirtual)
     filepos_t ReadData(IOCallback & input, ScopeMode ReadFully = SCOPE_ALL_DATA) override;
 
   protected:
-    uint64 Timecode; // temporary timecode of the first frame if there are more than one
-    uint16 TrackNumber;
+    uint64 Timecode{0}; // temporary timecode of the first frame if there are more than one
+    uint16 TrackNumber{0};
     binary DataBlock[5];
 
     const KaxCluster * ParentCluster{nullptr};
